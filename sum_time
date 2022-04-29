@@ -1,0 +1,70 @@
+import datetime
+
+
+def time_split(t):
+    t = str(t).split(":")
+    print(type(t), t)
+    if len(t) == 2:
+        t_h = 0
+        t_m = t[0]
+        t_s = t[1]
+    if len(t) == 3:
+        t_h = t[0]
+        t_m = t[1]
+        t_s = t[2]
+    return t_h, t_m, t_s
+
+
+def time_add(t1, t2):
+    t1_h = time_split(t1)[0]
+    t1_m = time_split(t1)[1]
+    t1_s = time_split(t1)[2]
+    t2_h = time_split(t2)[0]
+    t2_m = time_split(t2)[1]
+    t2_s = time_split(t2)[2]
+    t3_s = int(t1_s) + int(t2_s)
+    t3_sup = 0
+    while t3_s >= 60:
+        t3_sup += 1
+        t3_s = int(t3_s) - 60
+    t3_m = int(t1_m) + int(t2_m) + int(t3_sup)
+    t3_mup = 0
+    while t3_m >= 60:
+        t3_mup += 1
+        t3_m = int(t3_m) - 60
+    t3_h = int(t1_h) + int(t2_h) + int(t3_mup)
+    t3 = str(t3_h).zfill(2) + ":" + str(t3_m).zfill(2) + ":" + str(t3_s).zfill(2)
+    return t3
+
+
+if __name__ == "__main__":
+    flag = True
+    index = 0
+    print("欢迎使用时间相加计算!")
+    print("请注意您的时间格式,且确保你的输入法是英文输入 ==> 时:分:秒 ==> 00:00:00 或者 00:00")
+    print("将会在同级目录下创建log.txt文件来记录你的输入")
+    print("中文输入将会导致程序闪退!!!")
+    while flag:
+        time_in = input("请输入你要计算的时间(请确保你的“:”是英文字符!!!,输入“#”结束):")
+        with open('log.txt', mode='a', encoding="utf-8") as filename:
+            filename.write(str(datetime.datetime.now()))
+            filename.write("请输入你要计算的时间(请确保你的“:”是英文字符!!!,输入“#”结束):" + time_in + "\n")
+            filename.close()
+        if time_in == "#":
+            flag = False
+            print("计算结束,结果为:", time_last)
+            with open('log.txt', mode='a', encoding="utf-8") as filename:
+                filename.write(str(datetime.datetime.now()))
+                filename.write("计算结束,结果为:" + time_last + "\n")
+                filename.close()
+            break
+        if index == 0:
+            time_last = time_add(time_in, "00:00:00")
+        else:
+            time_last = time_add(time_in, time_last)
+        print("第", index + 1, "次合计:", time_last)
+        with open('log.txt', mode='a', encoding="utf-8") as filename:
+            filename.write(str(datetime.datetime.now()))
+            filename.write("第" + str(index + 1) + "次合计:" + time_last + "\n")
+            filename.close()
+        index += 1
